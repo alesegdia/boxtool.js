@@ -1,0 +1,240 @@
+
+
+<body>
+<script type="application/javascript" src="lib/jquery-2.1.3.min.js"></script>
+
+<div class="row">
+	<div class="col-md-row-6 col-md-offset-6">
+		<label>Image File:</label><br/>
+		<input type="file" id="imageLoader" name="imageLoader"/><br />
+		<br />
+		<label>JSON file:</label><br/>
+		<input type="file" id="jsonLoader" name="jsonLoader"/>
+		<br />
+		<br />
+		<canvas id="imageCanvas"></canvas>
+		<br />
+
+		<select id="tool-selector" onchange="changeTool();">
+			<option selected value="boxedit">BoxEdit</option>
+			<option value="pointnamer">PointNamer</option>
+		</select>
+
+		<br />
+
+		<select id="point-selector" onchange="selectPoint();">
+		</select>
+		<br />
+
+		<input type="text" id="point-name" onchange="pointNameChanged();" />
+		<br />
+
+		<button onclick="saveJsonToFile()">Save data to JSON!</button>
+		<br />
+
+	</div>
+</div>
+<script type="application/javascript">
+
+var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+    // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
+var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
+var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+    // At least Safari 3+: "[object HTMLElementConstructor]"
+var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
+var isIE = /*@cc_on!@*/false || !!document.documentMode; // At least IE6
+
+var current_tool;
+
+var changeTool = function( )
+{
+	current_tool = $("#tool-selector").val();
+	console.log(current_tool);
+};
+
+var selected_point_index = null;
+var selectPoint = function() {
+	selected_point_index = $("#point-selector").val();
+	console.log(selected_point_index);
+	console.log("bleh");
+	$("#point-name").val(named_points[selected_point_index].name);
+}
+var pointNameChanged = function()
+{
+	var point = named_points[selected_point_index];
+	point.name = $("#point-name").val();
+	$('#point-selector>option:selected').text(point.name + " (" + point.data[0] + "," + point.data[1] + ")");
+}
+changeTool();
+
+requestAnimFrame = (function() {
+  return window.requestAnimationFrame ||
+     window.webkitRequestAnimationFrame ||
+     window.mozRequestAnimationFrame ||
+     window.oRequestAnimationFrame ||
+     window.msRequestAnimationFrame ||
+     function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+       window.setTimeout(callback, 1000/60);
+     };
+})();
+
+var imageLoader = document.getElementById('imageLoader');
+imageLoader.addEventListener('change', handleImage, false);
+var jsonLoader = document.getElementById('jsonLoader');
+jsonLoader.addEventListener('change', handleJson, false);
+
+var canvas = document.getElementById('imageCanvas');
+var ctx = canvas.getContext('2d');
+
+var img = null;
+function handleImage(e){
+	var reader = new FileReader();
+	reader.onload = function(event){
+		img = new Image();
+		img.onload = function(){
+			canvas.width = img.width;
+			canvas.height = img.height;
+			ctx.drawImage(img,0,0);
+		}
+		img.src = event.target.result;
+	}
+	reader.readAsDataURL(e.target.files[0]);
+}
+
+var bleh;
+function handleJson(e){
+	var reader = new FileReader();
+	reader.onload = function(event){
+		rectdata = eval("(" + window.atob(event.target.result.split(',')[1]) + ")");
+		bleh = event.target.result;
+	}
+	reader.readAsDataURL(e.target.files[0]);
+}
+
+var tmp;
+var current_rect_topleft, current_rect_size, rectdata = [];
+var named_points = [];
+var toolset = {
+	"boxedit" : {
+		"mouseDownListener" : function(x,y) {
+			console.log(x, y);
+			current_rect_topleft = [x,y];
+			tmp = [0,0];
+		},
+		"mouseUpListener" : function(x,y) {
+			console.log(x, y);
+			var min = [ Math.min(current_rect_topleft[0], x), Math.min(current_rect_topleft[1], y) ];
+			var max = [ Math.max(current_rect_topleft[0], x), Math.max(current_rect_topleft[1], y) ];
+			current_rect_size = [max[0] - min[0], max[1] - min[1]];
+			rectdata.push([min, current_rect_size]);
+			current_rect_topleft = null;
+			tmp = null;
+		},
+		"mouseMoveListener" : function(x,y) {
+			if( tmp != null )
+			{
+				tmp[0] = x - current_rect_topleft[0];
+				tmp[1] = y - current_rect_topleft[1];
+			}
+		}
+	},
+	"pointnamer" : {
+		"mouseDownListener" : function(x,y) {
+			console.log("DOWN!");
+			named_points.push({
+				data : [x,y],
+				name : "point" + named_points.length
+			});
+			console.log(named_points.length);
+			var point_num = named_points.length - 1;
+			var is_selected = named_points.length == 0 ? "selected" : "";
+			$("#point-selector").append("<option " + is_selected + " value='" + point_num + "'>" + named_points[point_num].name + " (" + named_points[point_num].data[0] + "," + named_points[point_num].data[1] + ")</option>");
+			selectPoint();
+		},
+		"mouseUpListener" : function(x,y) { },
+		"mouseMoveListener" : function(x,y) { }
+	}
+};
+
+var mouseEventListenerFactory = function( listener_string )
+{
+	return function(event) {
+		var x,y;
+		if( isChrome )
+		{
+			x = event.x;
+			y = event.y;
+		}
+		else if( isFirefox )
+		{
+			x = event.clientX;
+			y = event.clientY;
+		}
+		console.log(event);
+		console.log(x,y);
+		var canvas = document.getElementById("imageCanvas");
+		x -= canvas.offsetLeft;
+		y -= canvas.offsetTop;
+		toolset[current_tool][listener_string](x,y);
+	};
+}
+
+canvas.addEventListener("mousedown", mouseEventListenerFactory("mouseDownListener"), false);
+canvas.addEventListener("mouseup", mouseEventListenerFactory("mouseUpListener"), false);
+canvas.addEventListener("mousemove", mouseEventListenerFactory("mouseMoveListener"), false);
+
+var render = function()
+{
+	ctx.fillStyle = "rgb(255,200,200)";
+	ctx.strokeWidth = 10;
+	ctx.fillRect(0,0,canvas.width, canvas.height);
+	ctx.strokeStyle = "rgb(0,0,255)";
+	if( img != null )
+		ctx.drawImage(img, 0, 0, img.width, img.height);
+	for( var i = 0; i < rectdata.length; i++ )
+	{
+		r = rectdata[i];
+		ctx.strokeRect(r[0][0], r[0][1], r[1][0], r[1][1]);
+		ctx.strokeRect(r[0][0], r[0][1], r[1][0], r[1][1]);
+		ctx.strokeRect(r[0][0], r[0][1], r[1][0], r[1][1]);
+	}
+
+	if( current_rect_topleft != null )
+	{
+		ctx.strokeStyle = "rgba(0,0,255,255)";
+		ctx.strokeRect(current_rect_topleft[0], current_rect_topleft[1], tmp[0], tmp[1]);
+		ctx.strokeRect(current_rect_topleft[0], current_rect_topleft[1], tmp[0], tmp[1]);
+		ctx.strokeRect(current_rect_topleft[0], current_rect_topleft[1], tmp[0], tmp[1]);
+	}
+
+	for( var i = 0; i < named_points.length; i++ )
+	{
+		ctx.fillStyle = "rgba(0,127,0,255)";
+		var point = named_points[i];
+		ctx.fillRect(point.data[0]-4, point.data[1]-4,8,8);
+		ctx.fillText(point.name, point.data[0]+8, point.data[1]+4);
+	}
+
+	if( selected_point_index != null )
+	{
+		ctx.fillStyle = "rgb(255,0,255)";
+		var point = named_points[selected_point_index];
+		ctx.fillRect(point.data[0]-4, point.data[1]-4,8,8);
+		ctx.fillText(point.name, point.data[0]+8, point.data[1]+4);
+	}
+
+	requestAnimFrame(render);
+}
+
+var saveJsonToFile = function()
+{
+	var url = 'data:text/json;charset=utf8,' + encodeURIComponent(JSON.stringify({ "rects" : rectdata, "named_points" : named_points }));
+	window.open(url, '_blank');
+	window.focus();
+}
+
+
+
+requestAnimFrame(render);
+</script>
+</body>
