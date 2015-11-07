@@ -11,7 +11,8 @@
 <div class="row">
 	<div class="col-md-row-6 col-md-offset-6">
 		<div>
-			<label>Image File:</label><br/>
+			<label>Columns:</label><input type="text" id="cols" /><br />
+			<label>Rows:</label><input type="text" id="rows" /><br />
 			<input type="file" id="imageLoader" name="imageLoader"/><br />
 		</div>
 
@@ -108,8 +109,21 @@ var ctx = canvas.getContext('2d');
 
 var img = null;
 
+var cols, rows;
+cols = rows = 1;
+
 function handleImage(e){
 	var reader = new FileReader();
+	var cols = Number($("#cols"));
+	var rows = Number($("#rows"));
+	function sanitize_number(input) {
+		if( typeof(input) != "number" || isNaN(input) || input < 1 ) {
+			return 1;
+		}
+		return input;
+	}
+	cols = sanitize_number(cols);
+	rows = sanitize_number(rows);
 	reader.onload = function(event){
 		img = new Image();
 		img.onload = function(){
