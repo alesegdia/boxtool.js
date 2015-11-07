@@ -1,11 +1,15 @@
 
-function makeBoxEdit () {
+function makeBoxEdit ( toolname ) {
 	var BOXEDIT = {
 		current_rect_topleft 	: [],
 		current_rect_size 		: [],
 		rectdata 				: [],
 		current_rect_size 		: 0,
 		tmp 					: [0,0],
+
+		"init" : function() {
+
+		},
 
 		"mouseDownListener" : function(x,y) {
 			this.current_rect_topleft = [x,y];

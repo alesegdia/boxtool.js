@@ -1,5 +1,5 @@
 
-function makePointEdit()
+function makePointEdit( toolname )
 {
 	var POINTEDIT = {
 		selected_point_index : null,
