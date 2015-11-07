@@ -27,11 +27,11 @@
 
 		<br />
 
-		<select id="point-selector" onchange="selectPoint();">
+		<select id="point-selector" onchange="pointedit_tool.selectPoint();">
 		</select>
 		<br />
 
-		<input type="text" id="point-name" onchange="pointNameChanged();" />
+		<input type="text" id="point-name" onchange="pointedit_tool.pointNameChanged();" />
 		<br />
 
 		<button onclick="saveJsonToFile()">Save data to JSON!</button>
@@ -40,6 +40,7 @@
 	</div>
 </div>
 <script src="tools/boxedit.js"></script>
+<script src="tools/pointedit.js"></script>
 <script type="application/javascript">
 
 var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
@@ -53,6 +54,7 @@ var isIE = /*@cc_on!@*/false || !!document.documentMode; // At least IE6
 var current_tool;
 
 var boxedit_tool = makeBoxEdit();
+var pointedit_tool = makePointEdit();
 
 var changeTool = function( )
 {
@@ -60,19 +62,6 @@ var changeTool = function( )
 	console.log(current_tool);
 };
 
-var selected_point_index = null;
-var selectPoint = function() {
-	selected_point_index = $("#point-selector").val();
-	console.log(selected_point_index);
-	console.log("bleh");
-	$("#point-name").val(named_points[selected_point_index].name);
-}
-var pointNameChanged = function()
-{
-	var point = named_points[selected_point_index];
-	point.name = $("#point-name").val();
-	$('#point-selector>option:selected').text(point.name + " (" + point.data[0] + "," + point.data[1] + ")");
-}
 changeTool();
 
 requestAnimFrame = (function() {
@@ -95,6 +84,7 @@ var canvas = document.getElementById('imageCanvas');
 var ctx = canvas.getContext('2d');
 
 var img = null;
+
 function handleImage(e){
 	var reader = new FileReader();
 	reader.onload = function(event){
@@ -122,22 +112,7 @@ function handleJson(e){
 var named_points = [];
 var toolset = {
 	"boxedit" : boxedit_tool,
-	"pointnamer" : {
-		"mouseDownListener" : function(x,y) {
-			console.log("DOWN!");
-			named_points.push({
-				data : [x,y],
-				name : "point" + named_points.length
-			});
-			console.log(named_points.length);
-			var point_num = named_points.length - 1;
-			var is_selected = named_points.length == 0 ? "selected" : "";
-			$("#point-selector").append("<option " + is_selected + " value='" + point_num + "'>" + named_points[point_num].name + " (" + named_points[point_num].data[0] + "," + named_points[point_num].data[1] + ")</option>");
-			selectPoint();
-		},
-		"mouseUpListener" : function(x,y) { },
-		"mouseMoveListener" : function(x,y) { }
-	}
+	"pointnamer" : pointedit_tool,
 };
 
 var mouseEventListenerFactory = function( listener_string )
@@ -177,29 +152,14 @@ var render = function()
 		ctx.drawImage(img, 0, 0, img.width, img.height);
 
 	boxedit_tool["render"](ctx);
-
-	for( var i = 0; i < named_points.length; i++ )
-	{
-		ctx.fillStyle = "rgba(0,127,0,255)";
-		var point = named_points[i];
-		ctx.fillRect(point.data[0]-4, point.data[1]-4,8,8);
-		ctx.fillText(point.name, point.data[0]+8, point.data[1]+4);
-	}
-
-	if( selected_point_index != null )
-	{
-		ctx.fillStyle = "rgb(255,0,255)";
-		var point = named_points[selected_point_index];
-		ctx.fillRect(point.data[0]-4, point.data[1]-4,8,8);
-		ctx.fillText(point.name, point.data[0]+8, point.data[1]+4);
-	}
+	pointedit_tool.render(ctx);
 
 	requestAnimFrame(render);
 }
 
 var saveJsonToFile = function()
 {
-	var url = 'data:text/json;charset=utf8,' + encodeURIComponent(JSON.stringify({ "rects" : boxedit_tool.rectdata, "named_points" : named_points }));
+	var url = 'data:text/json;charset=utf8,' + encodeURIComponent(JSON.stringify({ "rects" : boxedit_tool.rectdata, "named_points" : pointedit_tool.named_points }));
 	window.open(url, '_blank');
 	window.focus();
 }
