@@ -168,8 +168,12 @@ var render = function()
 	if( img != null )
 		ctx.drawImage(img, 0, 0, img.width, img.height);
 
-	boxedit_tool["render"](ctx);
-	pointedit_tool.render(ctx);
+	for( var k in toolset )
+	{
+		if( toolset.hasOwnProperty(k) ) {
+			toolset[k].render(ctx);
+		}
+	}
 
 	requestAnimFrame(render);
 }
