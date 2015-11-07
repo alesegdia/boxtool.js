@@ -63,8 +63,24 @@ var isIE = /*@cc_on!@*/false || !!document.documentMode; // At least IE6
 
 var current_tool;
 
-var boxedit_tool = makeBoxEdit();
-var pointedit_tool = makePointEdit();
+function makeToolset()
+{
+	function addTool( toolset_obj, tool_maker, tool_name )
+	{
+		toolset_obj[tool_name] = tool_maker( tool_name );
+	}
+	var tools = {};
+	addTool( tools, makeBoxEdit, "boxedit" );
+	addTool( tools, makePointEdit, "pointedit" );
+	return tools;
+}
+
+var toolset = makeToolset("toolset");
+
+$("#point-selector").bind("change", function() {
+	toolset["pointedit"].selectPoint();
+});
+
 
 var changeTool = function( )
 {
@@ -112,17 +128,11 @@ var bleh;
 function handleJson(e){
 	var reader = new FileReader();
 	reader.onload = function(event){
-		boxedit_tool.rectdata = eval("(" + window.atob(event.target.result.split(',')[1]) + ")");
+		toolset["boxedit"].rectdata = eval("(" + window.atob(event.target.result.split(',')[1]) + ")");
 		bleh = event.target.result;
 	}
 	reader.readAsDataURL(e.target.files[0]);
 }
-
-var named_points = [];
-var toolset = {
-	"boxedit" : boxedit_tool,
-	"pointnamer" : pointedit_tool,
-};
 
 var mouseEventListenerFactory = function( listener_string )
 {
