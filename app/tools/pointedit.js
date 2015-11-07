@@ -5,8 +5,12 @@ function makePointEdit()
 		selected_point_index : null,
 		named_points : [],
 
-		"init" : function (toolname) {
-
+		"init" : function (toolname, tool_div) {
+			$("#" + tool_div).append("<select id='point-selector'></select>");
+			var that = this;
+			$("#point-selector").bind("change", function() {
+				that.selectPoint();
+			});
 		},
 
 		"mouseDownListener" : function(x,y) {

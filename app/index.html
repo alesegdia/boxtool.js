@@ -37,8 +37,8 @@
 
 		<br />
 
-		<select id="point-selector">
-		</select>
+		<div id="pointedit_toolbox"></div>
+
 		<br />
 
 		<input type="text" id="point-name" onchange="pointedit_tool.pointNameChanged();" />
@@ -65,22 +65,19 @@ var current_tool;
 
 function makeToolset()
 {
-	function addTool( toolset_obj, tool_maker, tool_name )
+	function addTool( toolset_obj, tool_maker, tool_name, toolbox_div )
 	{
 		toolset_obj[tool_name] = tool_maker();
-		toolset_obj[tool_name].init(tool_name);
+		toolset_obj[tool_name].init( tool_name, toolbox_div );
 	}
 	var tools = {};
 	addTool( tools, makeBoxEdit, "boxedit" );
-	addTool( tools, makePointEdit, "pointedit" );
+	addTool( tools, makePointEdit, "pointedit", "pointedit_toolbox" );
 	return tools;
 }
 
 var toolset = makeToolset("toolset");
 
-$("#point-selector").bind("change", function() {
-	toolset["pointedit"].selectPoint();
-});
 
 
 var changeTool = function( )
@@ -162,13 +159,17 @@ canvas.addEventListener("mousemove", mouseEventListenerFactory("mouseMoveListene
 
 var render = function()
 {
+	// clear canvas
 	ctx.fillStyle = "rgb(255,200,200)";
 	ctx.strokeWidth = 10;
 	ctx.fillRect(0,0,canvas.width, canvas.height);
 	ctx.strokeStyle = "rgb(0,0,255)";
+
+	// draw image if it was loaded
 	if( img != null )
 		ctx.drawImage(img, 0, 0, img.width, img.height);
 
+	// draw tools elements
 	for( var k in toolset )
 	{
 		if( toolset.hasOwnProperty(k) ) {
@@ -176,6 +177,7 @@ var render = function()
 		}
 	}
 
+	// request next frame
 	requestAnimFrame(render);
 }
 
