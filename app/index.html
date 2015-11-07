@@ -10,24 +10,34 @@
 
 <div class="row">
 	<div class="col-md-row-6 col-md-offset-6">
-		<label>Image File:</label><br/>
-		<input type="file" id="imageLoader" name="imageLoader"/><br />
+		<div>
+			<label>Image File:</label><br/>
+			<input type="file" id="imageLoader" name="imageLoader"/><br />
+		</div>
+
 		<br />
-		<label>JSON file:</label><br/>
-		<input type="file" id="jsonLoader" name="jsonLoader"/>
+
+		<div>
+			<label>JSON file:</label><br/>
+			<input type="file" id="jsonLoader" name="jsonLoader"/>
+		</div>
+
 		<br />
-		<br />
-		<canvas id="imageCanvas"></canvas>
+
+		<div>
+			<canvas id="imageCanvas"></canvas>
+		</div>
+
 		<br />
 
 		<select id="tool-selector" onchange="changeTool();">
 			<option selected value="boxedit">BoxEdit</option>
-			<option value="pointnamer">PointNamer</option>
+			<option value="pointedit">PointNamer</option>
 		</select>
 
 		<br />
 
-		<select id="point-selector" onchange="pointedit_tool.selectPoint();">
+		<select id="point-selector">
 		</select>
 		<br />
 
