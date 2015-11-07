@@ -1,9 +1,13 @@
 
-function makePointEdit( toolname )
+function makePointEdit()
 {
 	var POINTEDIT = {
 		selected_point_index : null,
 		named_points : [],
+
+		"init" : function (toolname) {
+
+		},
 
 		"mouseDownListener" : function(x,y) {
 			this.named_points.push({

@@ -1,5 +1,5 @@
 
-function makeBoxEdit ( toolname ) {
+function makeBoxEdit () {
 	var BOXEDIT = {
 		current_rect_topleft 	: [],
 		current_rect_size 		: [],
@@ -7,7 +7,7 @@ function makeBoxEdit ( toolname ) {
 		current_rect_size 		: 0,
 		tmp 					: [0,0],
 
-		"init" : function() {
+		"init" : function (toolname) {
 
 		},
 
