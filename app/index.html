@@ -67,7 +67,8 @@ function makeToolset()
 {
 	function addTool( toolset_obj, tool_maker, tool_name )
 	{
-		toolset_obj[tool_name] = tool_maker( tool_name );
+		toolset_obj[tool_name] = tool_maker();
+		toolset_obj[tool_name].init(tool_name);
 	}
 	var tools = {};
 	addTool( tools, makeBoxEdit, "boxedit" );
