@@ -8,12 +8,10 @@ function makeBoxEdit () {
 		tmp 					: [0,0],
 
 		"mouseDownListener" : function(x,y) {
-			console.log(x, y);
 			this.current_rect_topleft = [x,y];
 			this.tmp = [0,0];
 		},
 		"mouseUpListener" : function(x,y) {
-			console.log(x, y);
 			var min = [ Math.min(this.current_rect_topleft[0], x), Math.min(this.current_rect_topleft[1], y) ];
 			var max = [ Math.max(this.current_rect_topleft[0], x), Math.max(this.current_rect_topleft[1], y) ];
 			this.current_rect_size = [max[0] - min[0], max[1] - min[1]];

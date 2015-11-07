@@ -6,12 +6,10 @@ function makePointEdit()
 		named_points : [],
 
 		"mouseDownListener" : function(x,y) {
-			console.log("DOWN!");
 			this.named_points.push({
 				data : [x,y],
 				name : "point" + this.named_points.length
 			});
-			console.log(this.named_points.length);
 			var point_num = this.named_points.length - 1;
 			var is_selected = this.named_points.length == 0 ? "selected" : "";
 			$("#point-selector").append(
@@ -25,8 +23,6 @@ function makePointEdit()
 
 		selectPoint : function() {
 			this.selected_point_index = $("#point-selector").val();
-			console.log(this.selected_point_index);
-			console.log("bleh");
 			$("#point-name").val(this.named_points[this.selected_point_index].name);
 		},
 
