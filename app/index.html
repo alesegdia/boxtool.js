@@ -59,16 +59,6 @@
 <script src="tools/pointedit.js"></script>
 <script type="application/javascript">
 
-function dec_frame()
-{
-	var next_row = current_row + 1;
-	if( next_row >= rows )
-	{
-		next_row = rows;
-	}
-	current_row = tmp;
-}
-
 var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
     // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
 var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
@@ -135,13 +125,33 @@ function get_current_row()
 
 function get_current_col()
 {
-	return current_frame % rows;
+	return current_frame % cols;
 }
+
+function dec_frame()
+{
+	console.log("dec");
+	current_frame = current_frame - 1;
+	if( current_frame < 0 ) current_frame = 0;
+	console.log(current_frame);
+}
+
+function inc_frame()
+{
+	console.log("rows", rows, "cols", cols);
+	console.log("inc");
+	current_frame = current_frame + 1;
+	var max_frame = rows * cols - 1;
+	console.log("maxframe", max_frame);
+	if( current_frame > max_frame ) current_frame = max_frame;
+	console.log(current_frame);
+}
+
 
 function handleImage(e){
 	var reader = new FileReader();
-	var cols = parseInt($("#cols").val());
-	var rows = parseInt($("#rows").val());
+	cols = parseInt($("#cols").val());
+	rows = parseInt($("#rows").val());
 	function sanitize_number(input) {
 		if( typeof(input) != "number" || isNaN(input) || input < 1 ) {
 			return 1;
@@ -208,11 +218,17 @@ var render = function()
 	var current_row = get_current_row();
 	var current_col = get_current_col();
 	if( img != null )
+	{
 		ctx.drawImage(img,
-				img.width 	/ cols * current_row,
-				img.height 	/ rows * current_col,
+				img.width 	/ cols * current_col,
+				img.height 	/ rows * current_row,
 				img.width 	/ cols,
-				img.height 	/ rows);
+				img.height 	/ rows,
+				0, 0,
+				img.width 	/ cols,
+				img.height 	/ rows
+				);
+	}
 
 	// draw tools elements
 	for( var k in toolset )
