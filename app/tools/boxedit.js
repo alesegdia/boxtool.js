@@ -19,7 +19,6 @@ function makeBoxEdit () {
 		},
 
 		"frameChanged" : function(new_frame) {
-			console.log("FRAME CHANGED!");
 			this.current_frame = new_frame;
 			if( this.framesData[new_frame] == undefined )
 			{
