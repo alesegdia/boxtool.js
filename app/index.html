@@ -130,21 +130,17 @@ function get_current_col()
 
 function dec_frame()
 {
-	console.log("dec");
 	current_frame = current_frame - 1;
 	if( current_frame < 0 ) current_frame = 0;
-	console.log(current_frame);
+	frameChanged();
 }
 
 function inc_frame()
 {
-	console.log("rows", rows, "cols", cols);
-	console.log("inc");
 	current_frame = current_frame + 1;
 	var max_frame = rows * cols - 1;
-	console.log("maxframe", max_frame);
 	if( current_frame > max_frame ) current_frame = max_frame;
-	console.log(current_frame);
+	frameChanged();
 }
 
 
@@ -169,6 +165,7 @@ function handleImage(e){
 		img.src = event.target.result;
 	}
 	reader.readAsDataURL(e.target.files[0]);
+	frameChanged();
 }
 
 var bleh;
@@ -201,6 +198,18 @@ var mouseEventListenerFactory = function( listener_string )
 		toolset[current_tool][listener_string](x,y);
 	};
 }
+
+function frameChanged()
+{
+	for( var k in toolset )
+	{
+		if( toolset.hasOwnProperty(k) ) {
+			toolset[k].frameChanged(current_frame);
+		}
+	}
+}
+
+frameChanged();
 
 canvas.addEventListener("mousedown", mouseEventListenerFactory("mouseDownListener"), false);
 canvas.addEventListener("mouseup", mouseEventListenerFactory("mouseUpListener"), false);
