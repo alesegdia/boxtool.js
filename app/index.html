@@ -29,6 +29,11 @@
 			<canvas id="imageCanvas"></canvas>
 		</div>
 
+		<div>
+			<button type="button" id="prev-frame" onclick="dec_frame()" >&lt;&lt;</button>
+			<button type="button" id="next-frame" onclick="inc_frame()">&gt;&gt;</button>
+		</div>
+
 		<br />
 
 		<select id="tool-selector" onchange="changeTool();">
@@ -53,6 +58,16 @@
 <script src="tools/boxedit.js"></script>
 <script src="tools/pointedit.js"></script>
 <script type="application/javascript">
+
+function dec_frame()
+{
+	var next_row = current_row + 1;
+	if( next_row >= rows )
+	{
+		next_row = rows;
+	}
+	current_row = tmp;
+}
 
 var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
     // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
@@ -109,8 +124,19 @@ var ctx = canvas.getContext('2d');
 
 var img = null;
 
-var cols, rows;
+var cols, rows, current_frame;
 cols = rows = 1;
+current_frame = 0;
+
+function get_current_row()
+{
+	return Math.floor(current_frame / cols);
+}
+
+function get_current_col()
+{
+	return current_frame % rows;
+}
 
 function handleImage(e){
 	var reader = new FileReader();
@@ -179,8 +205,14 @@ var render = function()
 	ctx.strokeStyle = "rgb(0,0,255)";
 
 	// draw image if it was loaded
+	var current_row = get_current_row();
+	var current_col = get_current_col();
 	if( img != null )
-		ctx.drawImage(img, 0, 0, img.width / cols, img.height / rows);
+		ctx.drawImage(img,
+				img.width 	/ cols * current_row,
+				img.height 	/ rows * current_col,
+				img.width 	/ cols,
+				img.height 	/ rows);
 
 	// draw tools elements
 	for( var k in toolset )
