@@ -6,6 +6,7 @@ function makePointEdit()
 		current_frame : 0,
 		framesData : [],
 		currentFrameData : undefined,
+		tool_div : undefined,
 
 		"newFrameData" : function()
 		{
@@ -23,14 +24,35 @@ function makePointEdit()
 				this.framesData[new_frame] = this.newFrameData();
 			}
 			this.currentFrameData = this.framesData[new_frame];
+			this.regenToolbox();
 		},
 
-		"init" : function (toolname, tool_div) {
-			$("#" + tool_div).append("<select id='point-selector'></select>");
+		"regenToolbox" : function()
+		{
+			$("#point-selector").remove();
+			this.tool_div.append("<select id='point-selector'></select>");
 			var that = this;
 			$("#point-selector").bind("change", function() {
 				that.selectPoint();
 			});
+			for( var i = 0; i < this.currentFrameData.named_points.length; i++ )
+			{
+				var point = this.currentFrameData.named_points[i];
+				var selected = "";
+				if( i == 0 )
+				{
+					selected = "selected='selected'";
+				}
+				$("#point-selector").append(
+						"<option " + selected + " value='" + point.num + "'>" +
+							point.name + " (" + point.data[0] + "," + point.data[1] + ")" +
+						"</option>");
+			}
+			this.currentFrameData.selected_point_index = null;
+		},
+
+		"init" : function (toolname, tool_div) {
+			this.tool_div = $("#" + tool_div);
 		},
 
 		"mouseDownListener" : function(x,y) {
@@ -40,6 +62,7 @@ function makePointEdit()
 			});
 			var point_num = this.currentFrameData.named_points.length - 1;
 			var is_selected = this.currentFrameData.named_points.length == 0 ? "selected" : "";
+			this.currentFrameData.named_points[this.currentFrameData.named_points.length-1].num = point_num;
 			$("#point-selector").append(
 					"<option " + is_selected + " value='" + point_num + "'>" +
 						this.currentFrameData.named_points[point_num].name + " (" + this.currentFrameData.named_points[point_num].data[0] + "," + this.currentFrameData.named_points[point_num].data[1] + ")" +
