@@ -26,7 +26,10 @@ var Tool = (function() {
 	};
 
 	tool.prototype.newFrameData = function() {
-		throw new Error("newFrameData not implemented!");
+		var frameData = {
+			selectedElementIndex : null,
+			elements : [],
+		};
 	};
 
 	tool.prototype.createSelect = function() {
@@ -39,14 +42,22 @@ var Tool = (function() {
 		// bind 'onchange' event to this.selectPoint()
 		var that = this;
 		this.getToolSelector().bind("change", function() {
-			that.selectPoint();
+			that.selectElement();
 		});
 
-		this.regenerateSelector(this.currentFrameData);
+		for( var i = 0; i < this.currentFrameData.elements.length; i++ )
+		{
+			var element = this.currentFrameData.elements[i];
+			var selected = "";
+			if( i == 0 ) selected = "selected='selected'";
+			var value = this.getValueForElement(element);
+			var name = this.getNameForElement(element);
+			this.getToolSelector().append("<option " + selected + " value='" + value + "'>" + name + "</option>");
+		}
 	};
 
-	tool.prototype.regenerateSelector( frameData ) {
-		throw new Error("regenerateSelector not implemented!");
+	tool.prototype.selectElement = function() {
+		this.getToolSelector().val(this.currentFrameData.elements[this.currentFrameData.selected].name);
 	};
 
 	return tool;
