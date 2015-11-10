@@ -22,7 +22,7 @@ var PointTool = (function() {
 	point.prototype.mouseMoveListener = function(x,y) {
 	};
 
-	point.prototype.render = function() {
+	point.prototype.render = function(ctx) {
 		for( var i = 0; i < this.currentFrameData.elements.length; i++ )
 		{
 			ctx.fillStyle = "rgba(0,127,0,255)";
