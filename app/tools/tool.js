@@ -91,16 +91,24 @@ var Tool = (function() {
 		}
 	};
 
-	tool.prototype.getValueForElement = function(element) {
-		throw new Error("getValueForElement not implemented!");
-	}
-
-	tool.prototype.getNameForElement = function(element) {
+	tool.prototype.getNameForElement = function(element, num) {
 		throw new Error("getNameForElement not implemented!");
 	}
 
-	tool.prototype.selectElement = function() {
-		this.getToolSelector().val(this.currentFrameData.elements[this.currentFrameData.selectedElementIndex].name);
+	tool.prototype.mouseDownListener = function(x,y) {
+		throw new Error("mouseDownListener not implemented!");
+	};
+
+	tool.prototype.mouseUpListener = function(x,y) {
+		throw new Error("mouseUpListener not implemented!");
+	};
+
+	tool.prototype.mouseMoveListener = function(x,y) {
+		throw new Error("mouseMoveListener not implemented!");
+	};
+
+	tool.prototype.render = function() {
+		throw new Error("render not implemented!");
 	};
 
 	return tool;
