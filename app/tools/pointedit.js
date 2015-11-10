@@ -31,6 +31,15 @@ var PointTool = (function() {
 			ctx.fillRect(point[0]-4, point[1]-4,8,8);
 			ctx.fillText(name, point[0]+8, point[1]+4);
 		}
+
+		if( this.currentFrameData.selectedElementIndex != null )
+		{
+			ctx.fillStyle = "rgb(255,0,255)";
+			var point = this.currentFrameData.elements[this.currentFrameData.selectedElementIndex].data.coords;
+			var name = this.currentFrameData.elements[this.currentFrameData.selectedElementIndex].name;
+			ctx.fillRect(point[0]-4, point[1]-4,8,8);
+			ctx.fillText(name, point[0]+8, point[1]+4);
+		}
 	};
 
 	return point;
