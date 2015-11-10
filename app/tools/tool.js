@@ -67,12 +67,10 @@ var Tool = (function() {
 		// bind 'onchange' event to this.selectPoint()
 		var that = this;
 		this.getToolSelector().bind("change", function() {
-			console.log(that.getToolSelector().val());
 			that.currentFrameData.selectedElementIndex = that.getToolSelector().val();
 			that.getToolEditor().val(that.currentFrameData.elements[that.currentFrameData.selectedElementIndex].name);
 		});
 		this.getToolEditor().bind("keyup", function() {
-			console.log(that.currentFrameData.selectedElementIndex);
 			if( that.currentFrameData.selectedElementIndex != null ) {
 				that.currentFrameData.elements[that.currentFrameData.selectedElementIndex].name = that.getToolEditor().val();
 				$("#" + that.toolSelectorID + " option[value='" + that.currentFrameData.selectedElementIndex + "']").html( that.getToolEditor().val() );
