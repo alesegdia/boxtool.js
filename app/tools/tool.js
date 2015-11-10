@@ -44,6 +44,8 @@ var Tool = (function() {
 		if( this.framesData[new_frame] == undefined ) {
 			this.framesData[new_frame] = this.newFrameData();
 		}
+		this.currentFrameData = this.framesData[new_frame];
+		this.createSelect();
 	};
 
 	tool.prototype.newFrameData = function() {
