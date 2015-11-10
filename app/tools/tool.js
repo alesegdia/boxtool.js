@@ -24,6 +24,21 @@ var Tool = (function() {
 
 	};
 
+	tool.prototype.insertNewElement = function(the_data) {
+		var element_num = this.currentFrameData.elements.length;
+		var obj = {
+			data : the_data,
+			name : this.getNameForElement(the_data, element_num),
+			num : element_num
+		};
+		this.currentFrameData.elements.push(obj);
+		this.appendElementOption(obj);
+	};
+
+	tool.prototype.appendElementOption = function(element) {
+		this.getToolSelector().append("<option " + "value='" + element.num + "'>" + element.name + "</option>");
+	};
+
 	tool.prototype.frameChanged = function(new_frame) {
 		this.currentFrame = new_frame;
 		if( this.framesData[new_frame] == undefined ) {
