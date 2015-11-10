@@ -4,14 +4,20 @@ var Tool = (function() {
 	var tool = function(tool_div, tool_name, element_base_name) {
 		this.toolDiv = $("#" + tool_div);
 		this.toolName = tool_name;
-		this.toolSelectorID = "#" + tool_name + "-selector";
+		this.elementBaseName = element_base_name;
+		this.toolSelectorID = tool_name + "-selector";
+		this.toolEditorID = tool_name + "-editor";
 		this.currentFrame = 0;
 		this.framesData = [];
 		this.currentFrameData = undefined;
 	};
 
 	tool.prototype.getToolSelector = function() {
-		return $(this.toolSelectorID);
+		return $("#" + this.toolSelectorID);
+	};
+
+	tool.prototype.getToolEditor = function() {
+		return $("#" + this.toolEditorID);
 	};
 
 	tool.prototype.clearFrameData = function() {
