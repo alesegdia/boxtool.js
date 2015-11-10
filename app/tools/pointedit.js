@@ -1,4 +1,17 @@
 
+var PointTool = (function() {
+
+	var point = function(tool_div, tool_name) {
+		Tool.call(this, tool_div, tool_name);
+	};
+
+	point.prototype = Object.create(Tool.prototype);
+	point.prototype.constructor = point;
+
+	return point;
+
+}());
+
 function makePointEdit()
 {
 	var POINTEDIT = {
