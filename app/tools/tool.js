@@ -68,7 +68,16 @@ var Tool = (function() {
 		// bind 'onchange' event to this.selectPoint()
 		var that = this;
 		this.getToolSelector().bind("change", function() {
-			that.selectElement();
+			console.log(that.getToolSelector().val());
+			that.currentFrameData.selectedElementIndex = that.getToolSelector().val();
+			that.getToolEditor().val(that.currentFrameData.elements[that.currentFrameData.selectedElementIndex].name);
+		});
+		this.getToolEditor().bind("keyup", function() {
+			console.log(that.currentFrameData.selectedElementIndex);
+			if( that.currentFrameData.selectedElementIndex != null ) {
+				that.currentFrameData.elements[that.currentFrameData.selectedElementIndex].name = that.getToolEditor().val();
+				$("#" + that.toolSelectorID + " option[value='" + that.currentFrameData.selectedElementIndex + "']").html( that.getToolEditor().val() );
+			}
 		});
 
 		for( var i = 0; i < this.currentFrameData.elements.length; i++ )
@@ -76,8 +85,8 @@ var Tool = (function() {
 			var element = this.currentFrameData.elements[i];
 			var selected = "";
 			if( i == 0 ) selected = "selected='selected'";
-			var value = this.getValueForElement(element);
-			var name = this.getNameForElement(element);
+			var value = element.num;
+			var name = element.name;
 			this.getToolSelector().append("<option " + selected + " value='" + value + "'>" + name + "</option>");
 		}
 	};
