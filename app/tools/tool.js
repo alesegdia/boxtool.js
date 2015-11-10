@@ -53,14 +53,17 @@ var Tool = (function() {
 			selectedElementIndex : null,
 			elements : [],
 		};
+		return frameData;
 	};
 
 	tool.prototype.createSelect = function() {
 		// delete previous selector if any
 		this.getToolSelector().remove();
+		this.getToolEditor().remove();
 
 		// create new selector
 		this.toolDiv.append("<select id='" + this.toolSelectorID + "'></select>");
+		this.toolDiv.append("<input type='text' id='" + this.toolEditorID + "' />");
 
 		// bind 'onchange' event to this.selectPoint()
 		var that = this;
