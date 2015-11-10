@@ -56,8 +56,16 @@ var Tool = (function() {
 		}
 	};
 
+	tool.prototype.getValueForElement = function(element) {
+		throw new Error("getValueForElement not implemented!");
+	}
+
+	tool.prototype.getNameForElement = function(element) {
+		throw new Error("getNameForElement not implemented!");
+	}
+
 	tool.prototype.selectElement = function() {
-		this.getToolSelector().val(this.currentFrameData.elements[this.currentFrameData.selected].name);
+		this.getToolSelector().val(this.currentFrameData.elements[this.currentFrameData.selectedElementIndex].name);
 	};
 
 	return tool;
