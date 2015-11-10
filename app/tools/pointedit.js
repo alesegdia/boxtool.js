@@ -8,6 +8,32 @@ var PointTool = (function() {
 	point.prototype = Object.create(Tool.prototype);
 	point.prototype.constructor = point;
 
+	point.prototype.getNameForElement = function(element, num) {
+		return "point" + num + "(" + element.coords[0] + "," + element.coords[1] + ")";
+	};
+
+	point.prototype.mouseDownListener = function(x,y) {
+		this.insertNewElement({ coords : [x,y] });
+		console.log("MAUSDAUN!");
+	};
+
+	point.prototype.mouseUpListener = function(x,y) {
+	};
+
+	point.prototype.mouseMoveListener = function(x,y) {
+	};
+
+	point.prototype.render = function() {
+		for( var i = 0; i < this.currentFrameData.elements.length; i++ )
+		{
+			ctx.fillStyle = "rgba(0,127,0,255)";
+			var point = this.currentFrameData.elements[i].data.coords;
+			var name = this.currentFrameData.elements[i].name;
+			ctx.fillRect(point[0]-4, point[1]-4,8,8);
+			ctx.fillText(name, point[0]+8, point[1]+4);
+		}
+	};
+
 	return point;
 
 }());
