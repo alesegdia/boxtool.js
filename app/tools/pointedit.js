@@ -14,7 +14,6 @@ var PointTool = (function() {
 
 	point.prototype.mouseDownListener = function(x,y) {
 		this.insertNewElement({ coords : [x,y] });
-		console.log("MAUSDAUN!");
 	};
 
 	point.prototype.mouseUpListener = function(x,y) {
