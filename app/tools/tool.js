@@ -1,10 +1,9 @@
 
 var Tool = (function() {
 
-	var tool = function(tool_div, tool_name, element_base_name) {
+	var tool = function(tool_div, tool_name) {
 		this.toolDiv = $("#" + tool_div);
 		this.toolName = tool_name;
-		this.elementBaseName = element_base_name;
 		this.toolSelectorID = tool_name + "-selector";
 		this.toolEditorID = tool_name + "-editor";
 		this.currentFrame = 0;
