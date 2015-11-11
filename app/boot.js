@@ -31,25 +31,26 @@ var isIE = /*@cc_on!@*/false || !!document.documentMode; // At least IE6
 
 var current_tool;
 
+$("#tools-div").append("<select id='tool-selector'></select>");
+$("#tool-selector").bind("change", function() {
+	current_tool = $("#tool-selector").val();
+});
+
 function makeToolset()
 {
-	var tools = {
-		"pointedit": new PointTool("pointedit_toolbox", "pointedit"),
-		"boxedit": new BoxTool("boxedit_toolbox", "boxedit"),
-	};
+	var tools = {};
+	function addTool( tool, name, toolbox_div ) {
+		tools[name] = new tool(toolbox_div, name);
+		$("#tool-selector").append("<option selected='selected' value='" + name + "'>" + name + "</option>");
+		current_tool = name;
+	}
+	addTool( PointTool, "pointedit", "pointedit_toolbox" );
+	addTool( BoxTool, "boxedit", "boxedit_toolbox" );
 	return tools;
 }
 
 var toolset = makeToolset("toolset");
 
-
-
-var changeTool = function( )
-{
-	current_tool = $("#tool-selector").val();
-};
-
-changeTool();
 
 requestAnimFrame = (function() {
   return window.requestAnimationFrame ||
