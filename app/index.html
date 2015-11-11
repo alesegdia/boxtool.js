@@ -38,11 +38,13 @@
 
 		<select id="tool-selector" onchange="changeTool();">
 			<option selected value="pointedit">PointNamer</option>
+			<option selected value="boxedit">BoxEdit</option>
 		</select>
 
 		<br />
 
 		<div id="pointedit_toolbox"></div>
+		<div id="boxedit_toolbox"></div>
 
 		<br />
 
@@ -69,7 +71,8 @@ var current_tool;
 function makeToolset()
 {
 	var tools = {
-		"pointedit": new PointTool("pointedit_toolbox", "pointedit")
+		"pointedit": new PointTool("pointedit_toolbox", "pointedit"),
+		"boxedit": new BoxTool("boxedit_toolbox", "boxedit"),
 	};
 	return tools;
 }
