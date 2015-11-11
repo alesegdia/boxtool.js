@@ -58,6 +58,28 @@
 <script src="tools/pointedit.js"></script>
 <script type="application/javascript">
 
+function relMouseCoords(event){
+    var totalOffsetX = 0;
+    var totalOffsetY = 0;
+    var canvasX = 0;
+    var canvasY = 0;
+    var currentElement = this;
+
+    do{
+        //totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+        //totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+        totalOffsetX += currentElement.offsetLeft;
+        totalOffsetY += currentElement.offsetTop;
+    }
+    while(currentElement = currentElement.offsetParent)
+
+    canvasX = event.pageX - totalOffsetX;
+    canvasY = event.pageY - totalOffsetY;
+
+    return {x:canvasX, y:canvasY}
+}
+HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
+
 var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
     // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
 var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
@@ -176,7 +198,11 @@ function handleJson(e){
 var mouseEventListenerFactory = function( listener_string )
 {
 	return function(event) {
+		var canvas = document.getElementById("imageCanvas");
 		var x,y;
+		var coords = canvas.relMouseCoords(event);
+		var canvasX = coords.x;
+		var canvasY = coords.y;
 		if( isChrome )
 		{
 			x = event.x;
@@ -187,10 +213,10 @@ var mouseEventListenerFactory = function( listener_string )
 			x = event.clientX;
 			y = event.clientY;
 		}
-		var canvas = document.getElementById("imageCanvas");
 		x -= canvas.offsetLeft;
 		y -= canvas.offsetTop;
-		toolset[current_tool][listener_string](x,y);
+		//toolset[current_tool][listener_string](x,y);
+		toolset[current_tool][listener_string](canvasX, canvasY);
 	};
 }
 
