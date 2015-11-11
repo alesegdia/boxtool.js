@@ -23,6 +23,14 @@ var Tool = (function() {
 
 	};
 
+	tool.prototype.getFrameUserData = function() {
+		return this.currentFrameData.userdata;
+	};
+
+	tool.prototype.getFrameElements = function() {
+		return this.currentFrameData.elements;
+	};
+
 	tool.prototype.insertNewElement = function(the_data) {
 		var element_num = this.currentFrameData.elements.length;
 		var obj = {
