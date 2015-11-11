@@ -122,6 +122,10 @@ var Tool = (function() {
 		throw new Error("render not implemented!");
 	};
 
+	tool.prototype.getDataForFrame = function(num_frame) {
+		throw new Error("getDataForFrame not implemented!");
+	};
+
 	return tool;
 
 }());
