@@ -1,4 +1,17 @@
 
+var BoxTool = (function() {
+
+	var box = function(tool_div, tool_name) {
+		Tool.call(this, tool_div, tool_name);
+	};
+
+	box.prototype = Object.create(Tool.prototype);
+	box.prototype.constructor = box;
+
+	return box;
+
+}());
+
 function makeBoxEdit () {
 	var BOXEDIT = {
 
