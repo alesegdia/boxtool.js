@@ -48,11 +48,17 @@ var Tool = (function() {
 	};
 
 	tool.prototype.newFrameData = function() {
+		var userdata = this.createFrameUserData();
 		var frameData = {
+			userdata : userdata,
 			selectedElementIndex : null,
 			elements : [],
 		};
 		return frameData;
+	};
+
+	tool.prototype.createFrameUserData = function() {
+		throw new Error("createUserData not implemented");
 	};
 
 	tool.prototype.createSelect = function() {
