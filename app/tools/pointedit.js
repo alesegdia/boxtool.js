@@ -27,11 +27,11 @@ var PointTool = (function() {
 	};
 
 	point.prototype.render = function(ctx) {
-		for( var i = 0; i < this.currentFrameData.elements.length; i++ )
+		for( var i = 0; i < this.getFrameElements().length; i++ )
 		{
 			ctx.fillStyle = "rgba(0,127,0,255)";
-			var point = this.currentFrameData.elements[i].data.coords;
-			var name = this.currentFrameData.elements[i].name;
+			var point = this.getFrameElements()[i].data.coords;
+			var name = this.getFrameElements()[i].name;
 			ctx.fillRect(point[0]-4, point[1]-4,8,8);
 			ctx.fillText(name, point[0]+8, point[1]+4);
 		}
@@ -39,8 +39,8 @@ var PointTool = (function() {
 		if( this.currentFrameData.selectedElementIndex != null )
 		{
 			ctx.fillStyle = "rgb(255,0,255)";
-			var point = this.currentFrameData.elements[this.currentFrameData.selectedElementIndex].data.coords;
-			var name = this.currentFrameData.elements[this.currentFrameData.selectedElementIndex].name;
+			var point = this.getFrameElements()[this.currentFrameData.selectedElementIndex].data.coords;
+			var name = this.getFrameElements()[this.currentFrameData.selectedElementIndex].name;
 			ctx.fillRect(point[0]-4, point[1]-4,8,8);
 			ctx.fillText(name, point[0]+8, point[1]+4);
 		}
