@@ -75,8 +75,8 @@ var Tool = (function() {
 		this.getToolEditor().remove();
 
 		// create new selector
-		this.toolDiv.append("<select id='" + this.toolSelectorID + "'></select>");
 		this.toolDiv.append("<input type='text' id='" + this.toolEditorID + "' />");
+		this.toolDiv.append("<select id='" + this.toolSelectorID + "'></select>");
 
 		// bind 'onchange' event to this.selectPoint()
 		var that = this;
