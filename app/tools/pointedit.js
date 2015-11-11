@@ -16,6 +16,10 @@ var PointTool = (function() {
 		this.insertNewElement({ coords : [x,y] });
 	};
 
+	point.prototype.createFrameUserData = function() {
+		return {};
+	};
+
 	point.prototype.mouseUpListener = function(x,y) {
 	};
 
