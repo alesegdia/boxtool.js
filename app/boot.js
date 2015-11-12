@@ -102,8 +102,9 @@ function inc_frame()
 	frameChanged();
 }
 
+var selectedImage = null;
 
-function handleImage(e){
+function loadImage(url) {
 	var reader = new FileReader();
 	cols = parseInt($("#cols").val());
 	rows = parseInt($("#rows").val());
@@ -123,9 +124,17 @@ function handleImage(e){
 		}
 		img.src = event.target.result;
 	}
-	reader.readAsDataURL(e.target.files[0]);
+	reader.readAsDataURL(url);
 	frameChanged();
 }
+
+function handleImage(e){
+	selectedImage = e.target.files[0];
+}
+
+$("#loadimg").bind("click", function() {
+	loadImage(selectedImage);
+});
 
 var bleh;
 function handleJson(e){
