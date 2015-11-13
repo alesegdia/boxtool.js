@@ -9,6 +9,7 @@ var Tool = (function() {
 		this.currentFrame = 0;
 		this.framesData = [];
 		this.currentFrameData = undefined;
+		this.lastUsedNum = 0;
 	};
 
 	tool.prototype.getToolSelector = function() {
@@ -32,18 +33,31 @@ var Tool = (function() {
 	};
 
 	tool.prototype.insertNewElement = function(the_data) {
-		var element_num = this.currentFrameData.elements.length;
+		var element_num = this.lastUsedNum;
+		this.lastUsedNum = this.lastUsedNum + 1;
 		var obj = {
 			data : the_data,
 			name : this.getNameForElement(the_data, element_num),
 			num : element_num
 		};
-		this.currentFrameData.elements.push(obj);
+		this.currentFrameData.elements[element_num] = obj;
 		this.appendElementOption(obj);
 	};
 
 	tool.prototype.appendElementOption = function(element) {
 		this.getToolSelector().append("<option " + "value='" + element.num + "'>" + element.name + "</option>");
+	};
+
+	tool.prototype.refreshOptions = function() {
+		$("#" + this.toolSelectorID + " option").remove();
+		for( var k in this.currentFrameData.elements ) {
+			if( this.currentFrameData.elements.hasOwnProperty(k) ) {
+				var element = this.currentFrameData.elements[k];
+				this.appendElementOption(element);
+			}
+		}
+		for( var i = 0; i < this.currentFrameData.elements.length; i++ ) {
+		}
 	};
 
 	tool.prototype.frameChanged = function(new_frame) {
@@ -60,7 +74,7 @@ var Tool = (function() {
 		var frameData = {
 			userdata : userdata,
 			selectedElementIndex : null,
-			elements : [],
+			elements : {},
 		};
 		return frameData;
 	};
@@ -69,19 +83,48 @@ var Tool = (function() {
 		throw new Error("createUserData not implemented");
 	};
 
+	tool.prototype.hide = function() {
+		this.toolDiv.hide();
+		$("#" + this.toolEditorID).hide();
+	};
+
+	tool.prototype.show = function() {
+		this.toolDiv.show();
+		$("#" + this.toolEditorID).show();
+	};
+
+	tool.prototype.removeSelected = function() {
+		if( this.currentFrameData.selectedElementIndex != null ) {
+			console.log(this.currentFrameData.elements);
+			var sel = $("#" + this.toolSelectorID).find(":selected").val();
+			console.log(sel);
+			$("#" + this.toolSelectorID + " option[value='" + sel + "']").remove();
+
+			var elements = this.currentFrameData.elements;
+			delete elements[this.currentFrameData.selectedElementIndex];
+			console.log(this.currentFrameData.elements);
+			this.currentFrameData.selectedElementIndex = null;
+			this.refreshOptions();
+		}
+	};
+
 	tool.prototype.createSelect = function() {
 		// delete previous selector if any
 		this.getToolSelector().remove();
 		this.getToolEditor().remove();
 
 		// create new selector
-		this.toolDiv.append("<input type='text' id='" + this.toolEditorID + "' />");
-		this.toolDiv.append("<select id='" + this.toolSelectorID + "'></select>");
+		this.toolDiv.append("<select class='form-control' multiple id='" + this.toolSelectorID + "'></select>");
+		$("#editOptionContent").append("<input type='text' id='" + this.toolEditorID + "' />");
+
+		$("#" + this.toolSelectorID + " option").bind("click", function() {
+			console.log("MEH");
+		});
 
 		// bind 'onchange' event to this.selectPoint()
 		var that = this;
 		this.getToolSelector().bind("change", function() {
-			that.currentFrameData.selectedElementIndex = that.getToolSelector().val();
+			that.currentFrameData.selectedElementIndex = that.getToolSelector().val()[0];
 			that.getToolEditor().val(that.currentFrameData.elements[that.currentFrameData.selectedElementIndex].name);
 		});
 		this.getToolEditor().bind("keyup", function() {
@@ -91,14 +134,17 @@ var Tool = (function() {
 			}
 		});
 
-		for( var i = 0; i < this.currentFrameData.elements.length; i++ )
-		{
-			var element = this.currentFrameData.elements[i];
-			var selected = "";
-			if( i == 0 ) selected = "selected='selected'";
-			var value = element.num;
-			var name = element.name;
-			this.getToolSelector().append("<option " + selected + " value='" + value + "'>" + name + "</option>");
+		var i = 0;
+		for( var k in this.currentFrameData.elements ) {
+			if( this.currentFrameData.elements.hasOwnProperty(k) ) {
+				var element = this.currentFrameData.elements[k];
+				var selected = "";
+				if( i == 0 ) selected = "selected='selected'";
+				var value = element.num;
+				var name = element.name;
+				this.getToolSelector().append("<option " + selected + " value='" + value + "'>" + name + "</option>");
+			}
+			i++;
 		}
 	};
 

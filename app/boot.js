@@ -287,7 +287,13 @@ var saveJsonToFile = function()
 	window.focus();
 }
 
+function removeElementFromTool()
+{
+	toolset[current_tool].removeSelected();
+}
 
+
+selectTool();
 
 requestAnimFrame(render);
 
