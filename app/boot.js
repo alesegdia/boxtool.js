@@ -31,9 +31,25 @@ var isIE = /*@cc_on!@*/false || !!document.documentMode; // At least IE6
 
 var current_tool;
 
+
+function selectTool()
+{
+	current_tool = $("#tool-selector").val();
+
+	for( var k in toolset )
+	{
+		if( toolset.hasOwnProperty(k) )
+		{
+			toolset[k].hide();
+		}
+	}
+
+	toolset[current_tool].show();
+}
+
 $("#tools-div").append("<select id='tool-selector'></select>");
 $("#tool-selector").bind("change", function() {
-	current_tool = $("#tool-selector").val();
+	selectTool();
 });
 
 function makeToolset()
