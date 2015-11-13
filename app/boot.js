@@ -104,6 +104,46 @@ function inc_frame()
 
 var selectedImage = null;
 
+function makePager( index ) {
+	return function() {
+		current_frame = index;
+		frameChanged();
+	}
+}
+
+function reloadPagination() {
+	var pagi = $("#sheetPagination");
+	pagi.empty();
+	pagi.append("<ul class='pagination' id='paginer'></ul>");
+
+	var paginer = $("#paginer");
+
+	var prev_enabled = (cols * rows == 1 || current_frame == 0) ? "class='disabled'" : "";
+	var prev = paginer.append('<li id="prevpag" ' + prev_enabled + '><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>');
+	prev.bind("click", function() {
+		console.log(current_frame);
+		dec_frame();
+	});
+
+	var elem;
+	for( var i = 1; i <= cols * rows; i++ ) {
+		if( (current_frame+1) == i ) {
+			elem = paginer.append('<li class="active"><a id="pager' + i + '" href="#">' + i + '<span class="sr-only">(current)</span></a></li>');
+			$("#pager" + i).bind("click", makePager(i-1));
+		} else {
+			elem = paginer.append('<li><a id="pager' + i + '" href="#">' + i + '</li>');
+			$("#pager" + i).bind("click", makePager(i-1));
+		}
+	}
+
+	var next_enabled = (cols * rows == 1 || current_frame == rows * cols - 1) ? "class='disabled'" : "";
+	var next = paginer.append('<li id="nextpag" ' + next_enabled + '><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>');
+	next.bind("click", function() {
+		console.log(current_frame);
+		inc_frame();
+	});
+}
+
 function loadImage(url) {
 	var reader = new FileReader();
 	cols = parseInt($("#cols").val());
@@ -179,6 +219,7 @@ function frameChanged()
 			toolset[k].frameChanged(current_frame);
 		}
 	}
+	reloadPagination();
 }
 
 frameChanged();
