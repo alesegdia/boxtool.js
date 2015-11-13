@@ -47,14 +47,16 @@ var BoxTool = (function() {
 	};
 
 	box.prototype.render = function(x,y) {
-		for( var i = 0; i < this.getFrameElements().length; i++ )
-		{
-			var r = this.getFrameElements()[i].data;
-			var n = this.getFrameElements()[i].name;
-			ctx.strokeStyle = "rgba(0,0,255,255)";
-			ctx.strokeRect(r.pos[0], r.pos[1], r.size[0], r.size[1]);
-			ctx.fillStyle= "rgba(0,0,255,255)";
-			ctx.fillText(n, r.pos[0], r.pos[1]);
+		for( var k in this.currentFrameData.elements ) {
+			if( this.currentFrameData.elements.hasOwnProperty(k) ) {
+				var element = this.getFrameElements()[k];
+				var r = element.data;
+				var n = element.name;
+				ctx.strokeStyle = "rgba(0,0,255,255)";
+				ctx.strokeRect(r.pos[0], r.pos[1], r.size[0], r.size[1]);
+				ctx.fillStyle= "rgba(0,0,255,255)";
+				ctx.fillText(n, r.pos[0], r.pos[1]);
+			}
 		}
 
 		if( this.getFrameUserData().currentRectTL != null && this.getFrameUserData().currentRectSize != null )
