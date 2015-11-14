@@ -162,7 +162,15 @@ var Tool = (function() {
 	};
 
 	tool.prototype.getDataForFrame = function(num_frame) {
-		throw new Error("getDataForFrame not implemented!");
+		var elements = [];
+		if( this.framesData[num_frame] != undefined ) {
+			for( var k in this.framesData[num_frame].elements ) {
+				if( this.framesData[num_frame].elements.hasOwnProperty(k) ) {
+					elements.push(this.framesData[num_frame].elements[k]);
+				}
+			}
+		}
+		return elements;
 	};
 
 	return tool;

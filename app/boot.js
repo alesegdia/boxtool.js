@@ -275,9 +275,21 @@ var render = function()
 	requestAnimFrame(render);
 }
 
+var collectDataToSave = function() {
+	var frames = [];
+	for( var i = 1; i <= rows * cols; i++ )
+	{
+		var pointdata = toolset["pointedit"].getDataForFrame(i-1);
+		var boxdata = toolset["boxedit"].getDataForFrame(i-1);
+		frames.push({ box: boxdata, point: pointdata });
+	}
+	return frames;
+}
+
 var saveJsonToFile = function()
 {
-	var url = 'data:text/json;charset=utf8,' + encodeURIComponent(JSON.stringify({ "rects" : boxedit_tool.rectdata, "named_points" : pointedit_tool.named_points }));
+	var dataToSave = collectDataToSave();
+	var url = 'data:text/json;charset=utf8,' + encodeURIComponent(JSON.stringify(dataToSave));
 	window.open(url, '_blank');
 	window.focus();
 }
