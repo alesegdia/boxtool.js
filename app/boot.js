@@ -193,8 +193,22 @@ $("#loadimg").bind("click", function() {
 function handleJson(e){
 	var reader = new FileReader();
 	reader.onload = function(event){
+		var raw_data = event.target.result.split(',')[1];
+		var the_data = eval(window.atob(raw_data));
+		console.log("data len:", the_data.length);
+		for( var i = 0; i < the_data.length; i++ ) {
+			var frameData = the_data[i];
+			var boxData = frameData["box"];
+			var pointData = frameData["point"];
+			toolset["pointedit"].loadDataForFrame( i, pointData );
+			toolset["boxedit"].loadDataForFrame( i, boxData );
+		}
 	}
+
+	toolset["pointedit"].refreshOptions();
+	toolset["boxedit"].refreshOptions();
 	reader.readAsDataURL(e.target.files[0]);
+	selectTool();
 }
 
 var mouseEventListenerFactory = function( listener_string )

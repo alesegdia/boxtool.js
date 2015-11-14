@@ -60,9 +60,9 @@ var Tool = (function() {
 		}
 	};
 
-	tool.prototype.frameChanged = function(new_frame) {
+	tool.prototype.frameChanged = function(new_frame, force) {
 		this.currentFrame = new_frame;
-		if( this.framesData[new_frame] == undefined ) {
+		if( this.framesData[new_frame] == undefined || force ) {
 			this.framesData[new_frame] = this.newFrameData();
 		}
 		this.currentFrameData = this.framesData[new_frame];
@@ -171,6 +171,18 @@ var Tool = (function() {
 			}
 		}
 		return elements;
+	};
+
+	tool.prototype.loadDataForFrame = function( num_frame, the_data ) {
+		this.frameChanged(num_frame, true);
+		console.log("frame num:", num_frame);
+		this.framesData[num_frame].elements = {};
+		console.log("data:", the_data);
+		for( var i = 0; i < the_data.length; i++ ) {
+			this.framesData[num_frame].elements[the_data[i].num] = the_data[i];
+			this.lastUsedNum = Math.max(the_data[i].num + 1, this.lastUsedNum);
+		}
+		this.refreshOptions();
 	};
 
 	return tool;
