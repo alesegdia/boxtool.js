@@ -137,7 +137,6 @@ function reloadPagination() {
 	var prev_enabled = (cols * rows == 1 || current_frame == 0) ? "class='disabled'" : "";
 	var prev = paginer.append('<li id="prevpag" ' + prev_enabled + '><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>');
 	prev.bind("click", function() {
-		console.log(current_frame);
 		dec_frame();
 	});
 
@@ -155,7 +154,6 @@ function reloadPagination() {
 	var next_enabled = (cols * rows == 1 || current_frame == rows * cols - 1) ? "class='disabled'" : "";
 	var next = paginer.append('<li id="nextpag" ' + next_enabled + '><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>');
 	next.bind("click", function() {
-		console.log(current_frame);
 		inc_frame();
 	});
 }
@@ -192,12 +190,9 @@ $("#loadimg").bind("click", function() {
 	loadImage(selectedImage);
 });
 
-var bleh;
 function handleJson(e){
 	var reader = new FileReader();
 	reader.onload = function(event){
-		toolset["boxedit"].rectdata = eval("(" + window.atob(event.target.result.split(',')[1]) + ")");
-		bleh = event.target.result;
 	}
 	reader.readAsDataURL(e.target.files[0]);
 }

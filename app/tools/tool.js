@@ -95,14 +95,11 @@ var Tool = (function() {
 
 	tool.prototype.removeSelected = function() {
 		if( this.currentFrameData.selectedElementIndex != null ) {
-			console.log(this.currentFrameData.elements);
 			var sel = $("#" + this.toolSelectorID).find(":selected").val();
-			console.log(sel);
 			$("#" + this.toolSelectorID + " option[value='" + sel + "']").remove();
 
 			var elements = this.currentFrameData.elements;
 			delete elements[this.currentFrameData.selectedElementIndex];
-			console.log(this.currentFrameData.elements);
 			this.currentFrameData.selectedElementIndex = null;
 			this.refreshOptions();
 		}
@@ -116,10 +113,6 @@ var Tool = (function() {
 		// create new selector
 		this.toolDiv.append("<select class='form-control' multiple id='" + this.toolSelectorID + "'></select>");
 		$("#editOptionContent").append("<input type='text' id='" + this.toolEditorID + "' />");
-
-		$("#" + this.toolSelectorID + " option").bind("click", function() {
-			console.log("MEH");
-		});
 
 		// bind 'onchange' event to this.selectPoint()
 		var that = this;
