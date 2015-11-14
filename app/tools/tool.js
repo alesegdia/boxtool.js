@@ -73,6 +73,7 @@ var Tool = (function() {
 		var userdata = this.createFrameUserData();
 		var frameData = {
 			userdata : userdata,
+			rawSelection : [],
 			selectedElementIndex : null,
 			elements : {},
 		};
@@ -118,12 +119,16 @@ var Tool = (function() {
 		var that = this;
 		this.getToolSelector().bind("change", function() {
 			that.currentFrameData.selectedElementIndex = that.getToolSelector().val()[0];
+			that.currentFrameData.rawSelection = that.getToolSelector().val();
 			that.getToolEditor().val(that.currentFrameData.elements[that.currentFrameData.selectedElementIndex].name);
 		});
 		this.getToolEditor().bind("keyup", function() {
 			if( that.currentFrameData.selectedElementIndex != null ) {
-				that.currentFrameData.elements[that.currentFrameData.selectedElementIndex].name = that.getToolEditor().val();
-				$("#" + that.toolSelectorID + " option[value='" + that.currentFrameData.selectedElementIndex + "']").html( that.getToolEditor().val() );
+				for( var i = 0; i < that.currentFrameData.rawSelection.length; i++ )
+				{
+					that.currentFrameData.elements[that.currentFrameData.rawSelection[i]].name = that.getToolEditor().val();
+					$("#" + that.toolSelectorID + " option[value='" + that.currentFrameData.rawSelection[i] + "']").html( that.getToolEditor().val() );
+				}
 			}
 		});
 
